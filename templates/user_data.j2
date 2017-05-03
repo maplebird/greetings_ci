@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Bootstraps server
+echo "alias jkl='sudo su -'" >> /etc/profile
+ln -s /var/lib/cloud/instance/scripts/part-001 /root/user_data
+
+# Make sure git, nginx is installed
+yum -y install git nginx
+
+# Clone repo and/or checkout code
+cd /opt
+if [ ! -d "{{ greetings_project_folder }}" ]; then
+    git clone {{ greetings_repo_url }}
+fi
+cd {{ greetings_project_folder }}
+git checkout {{ default_branches[greetings_env] }}
+git pull
+
+# Deploy code
+rm -rf /var/www/html/*
+cp -r src/* {{ html_docroot }}/
+
+# Make sure nginx is started/restarted
+service nginx restart

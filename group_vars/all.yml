@@ -1,0 +1,48 @@
+# Group vars for greetings deployment pipeline
+---
+
+# Git project options
+greetings_repo_url: "https://github.com/maplebird/greetings_src.git"
+greetings_project_folder: greetings_src
+
+# Webserver options
+html_docroot: /usr/share/nginx/html
+
+# AWS ASG options
+lc_name: "greetings_{{ greetings_env }}_lc"
+lc_user_data_template: templates/user_data.j2
+lc_user_data_file: temp/user_data
+instance_type: t2.micro
+ssh_key_name: greetings
+asg_name: "greetings_{{ greetings_env }}_asg"
+security_groups:
+  - client
+asg_tags:
+  - Name: "{{ asg_name }}"
+  - Env: "{{ greetings_env }}"
+
+# General AWS options
+aws_region: us-west-2
+assign_public_ip: true    ## Set to false if using load balancer + NAT gateway + internal subnets
+
+# Lookup AWS API keys from local machine
+aws_access_key: "{{ lookup('file', '/root/aws_access_key') }}"
+aws_secret_key: "{{ lookup('file', '/root/aws_secret_key') }}"
+
+# Use latest Amazon Linux (or RHEL, etc) AMI.. using Amazon Linux here
+ami_id: ami-4836a428
+
+# Environment specific options
+asg_desired_capacity:
+  dev: 1
+  test: 1
+  prod: 1
+default_branches:
+  dev: master
+  test: master
+  prod: production
+
+# Ansible options
+ansible_ssh_private_key_file: /root/greetings.pem
+ansible_connection: ssh
+ansible_ssh_user: ec2-user

@@ -1,0 +1,54 @@
+# Launch auto scaling group using Amazon Linux for an environment
+---
+
+- name: Launch an Auto-Scaling Group for Greetings microservice
+  hosts: localhost
+  gather_facts: true
+  vars:
+    # Pass greetings_env value on command line to override
+    - greetings_env: dev
+
+  tasks:
+
+    - name: Template the user data file
+      template:
+        src: "{{ lc_user_data_template }}"
+        dest: "{{ lc_user_data_file }}"
+        mode: 0644
+      delegate_to: localhost
+
+    - name: set the location of the user_data file as it relative to the playbook
+      set_fact:
+        user_data_file_location: "{{ lc_user_data_file }}"
+
+    - name: "Create a Launch Configuration for the {{ greetings_env }} environment"
+      ec2_lc:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        name: "{{ lc_name }}"
+        region: "{{ aws_region }}"
+        image_id: "{{ ami_id }}"
+        instance_type: "{{ instance_type | default('t2.micro') }}"
+        key_name: "{{ ssh_key_name }}"
+        security_groups: "{{ security_groups }}"
+        state: "{{ asg_state|default('present') }}"
+        user_data: "{{ lookup('file', user_data_file_location) }}"
+      register: created_lc
+
+    - name: "Launch an Auto Scaling Group for the {{ greetings_env }} environment"
+      ec2_asg:
+        aws_access_key: "{{	aws_access_key }}"
+        aws_secret_key: "{{	aws_secret_key }}"
+        region: "{{ aws_region }}"
+        name: "{{ asg_name }}"
+        launch_config_name: "{{ created_lc.name }}"
+        min_size: "{{ asg_min_size | default(1) }}"
+        max_size: "{{ asg_max_size | default(1) }}"
+        desired_capacity: "{{ asg_desired_capacity[greetings_env] | default(1) }}"
+        tags: "{{ asg_tags }}"
+        load_balancers: "{{ asg_load_balancers | default([]) }}"
+      register: created_asg
+
+    - name: Show ASG information
+      debug:
+        var: created_asg
