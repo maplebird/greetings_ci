@@ -1,5 +1,5 @@
 .idea*
 *.retry
-temp/*
+ansible/temp/*
 unittest*
 src*

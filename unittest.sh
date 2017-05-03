@@ -27,7 +27,7 @@ cd greetings_src
 git checkout ${BRANCH}
 git pull
 
-# Make sure node isn't running
+# Make sure server isn't running
 kill -9 $(ps -ef | grep 'node server.js' | grep -v grep | awk '{print $2}')
 
 # Install project
@@ -37,3 +37,6 @@ cd ${DIR}/unittest/greetings_src && npm start &
 # Run unit tests
 sleep 3
 python unittest/tests.py -u localhost -p 8080
+
+# Kill the server
+kill -9 $(ps -ef | grep 'node server.js' | grep -v grep | awk '{print $2}')
