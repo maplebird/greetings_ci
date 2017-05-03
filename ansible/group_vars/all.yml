@@ -11,7 +11,7 @@ html_docroot: /usr/share/nginx/html
 # AWS ASG options
 lc_name: "greetings_{{ greetings_env }}_lc"
 lc_user_data_template: templates/user_data.j2
-lc_user_data_file: temp/user_data
+lc_user_data_file: user_data
 instance_type: t2.micro
 ssh_key_name: greetings
 asg_name: "greetings_{{ greetings_env }}_asg"
