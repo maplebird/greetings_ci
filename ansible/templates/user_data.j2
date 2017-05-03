@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Bootstraps server
+
+# Add shortcuts
+echo "alias jkl='sudo su -'" >> /etc/profile
+ln -s /var/lib/cloud/instance/scripts/part-001 /root/user_data
+
+# Make sure git and node are installed
+yum -y install git nodejs npm --enablerepo=epel
+
+# Clone repo and/or checkout code
+cd /opt
+if [ ! -d "{{ greetings_project_folder }}" ]; then
+    git clone {{ greetings_repo_url }}
+fi
+cd {{ greetings_project_folder }}
+git checkout {{ default_branches[greetings_env] }}
+git pull
+
+# Install init.d service
+/bin/cp -f {{ greetings_project_folder }}/sys/greetings /etc/rc.d/init.d/
+chmod +x /etc/rc.d/init.d/greetings
+
+# Clean, install dependencies
+service greetings stop
+cd {{ greetings_project_folder }}
+rm -rf node_modules
+npm install
+
+# Start the API
+service greetings start
+
+# Show service status
+service greetings status

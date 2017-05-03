@@ -21,4 +21,4 @@ fi
 # Upload source code to S3
 
 cd ansible
-ansible-playbook remote_deploy.yml -e "greetings_env=${ENV}" ${BRANCH_ANSIBLE_ARG}
+ansible-playbook launch_asg.yml -e "greetings_env=${ENV}"

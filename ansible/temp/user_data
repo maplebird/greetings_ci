@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Bootstraps server
+
+# Make sure git and node are installed
+yum -y install git nodejs npm --enablerepo=epel
+
+# Clone repo and/or checkout code
+cd /opt
+if [ ! -d "greetings_src" ]; then
+    git clone https://github.com/maplebird/greetings_src.git
+fi
+cd greetings_src
+git checkout master
+git pull
+
+
+# Install systemd service
+cp /opt/greetings_src/sys/greetings /etc/rc.d/init.d/
+chmod +x /etc/rc.d/init.d/greetings
+
+# Clean and install dependencies
+service greetings stop
+cd /opt/greetings_src
+rm -rf node_modules
+npm install
+
+# Start the API
+service greetings start
+
+# Show service status
+service greetings status

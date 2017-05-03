@@ -29,6 +29,7 @@
         region: "{{ aws_region }}"
         image_id: "{{ ami_id }}"
         instance_type: "{{ instance_type | default('t2.micro') }}"
+        instance_profile_name: "{{ asg_iam_ec2_role }}"
         key_name: "{{ ssh_key_name }}"
         security_groups: "{{ security_groups }}"
         state: "{{ asg_state|default('present') }}"
