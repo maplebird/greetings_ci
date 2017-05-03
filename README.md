@@ -16,6 +16,8 @@ Allows the following:
 - Deploy new code to an environment without re-provisioning an ASG (Upload new build first)
 - Run unit tests against a local copy of a server
 
+Expects your AWS access/secret keys in /root/aws_access_key and /root/aws_secret_key as plain text files.
+
 ### Upload Code to S3
 
 Use the upload_code_to_s3.sh script with the ENV argument and an optional BRANCH argument.
@@ -57,7 +59,6 @@ Note: This requires your AWS account to be already provisioned with the followin
 3. IAM role for instances
 4. An ec2 SSH key already created.  Define ssh_key_name with the name of your SSH key.
 
-Expects your AWS access/secret keys in /root/aws_access_key and /root/aws_secret_key as plain text files.
 
 ### Run Deploy
 

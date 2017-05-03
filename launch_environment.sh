@@ -15,4 +15,4 @@ echo "Creating ${ENV} ASG on `date`"
 # Upload source code to S3
 
 cd ansible
-ansible-playbook launch_asg.yml -e "greetings_env=${ENV}" -vvv
+ansible-playbook launch_asg.yml -e "greetings_env=${ENV}"

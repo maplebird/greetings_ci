@@ -20,10 +20,6 @@
           "tag:Env": "{{ greetings_env }}"
       register: ec2_instances
 
-#    - name: Show instance facts
-#      debug:
-#        var: ec2_instances
-
     - name: Create list of instance IPs
       set_fact:
         ec2_instance_ips: "{{ ec2_instances.instances | map(attribute='public_ip_address') | list }}"
