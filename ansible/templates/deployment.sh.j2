@@ -9,18 +9,25 @@ else
     BRANCH=$1
 fi
 
-# Clone repo and/or checkout code
+# Grab code from S3 bucket
 cd /opt
 if [ ! -d "{{ greetings_project_folder }}" ]; then
-    git clone {{ greetings_repo_url }}
+    mkdir {{ greetings_repo_url }}
 fi
-cd {{ greetings_project_folder }}
-git checkout ${BRANCH}
-git pull
+aws s3 cp s3://maplebird-greetings-project/{{ greetings_env }} /opt/{{ greetings_project_folder }}/ --recursive
 
-# Clean old code and deploy new code
-rm -rf {{ html_docroot }}/*
-cp -r src/* {{ html_docroot }}/
+# Install init.d service
+/bin/cp -f /opt/{{ greetings_project_folder }}/sys/greetings /etc/rc.d/init.d/greetings
+chmod +x /etc/rc.d/init.d/greetings
 
-# Make sure nginx is started/restarted
-service nginx restart
+# Clean, install dependencies
+service greetings stop
+cd /opt/{{ greetings_project_folder }}
+rm -rf node_modules
+npm install
+
+# Start the API
+service greetings start
+
+# Show service status
+service greetings status

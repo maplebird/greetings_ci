@@ -7,24 +7,22 @@ echo "alias jkl='sudo su -'" >> /etc/profile
 ln -s /var/lib/cloud/instance/scripts/part-001 /root/user_data
 
 # Make sure git and node are installed
-yum -y install git nodejs npm --enablerepo=epel
+yum -y install awscli nodejs npm --enablerepo=epel
 
-# Clone repo and/or checkout code
+# Grab code from S3 bucket
 cd /opt
 if [ ! -d "greetings_src" ]; then
-    git clone https://github.com/maplebird/greetings_src.git
+    mkdir https://github.com/maplebird/greetings_src.git
 fi
-cd greetings_src
-git checkout master
-git pull
+aws s3 cp s3://maplebird-greetings-project/demo /opt/greetings_src/ --recursive
 
 # Install init.d service
-/bin/cp -f greetings_src/sys/greetings /etc/rc.d/init.d/
+/bin/cp -f /opt/greetings_src/sys/greetings /etc/rc.d/init.d/greetings
 chmod +x /etc/rc.d/init.d/greetings
 
 # Clean, install dependencies
 service greetings stop
-cd greetings_src
+cd /opt/greetings_src
 rm -rf node_modules
 npm install
 

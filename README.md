@@ -57,6 +57,8 @@ Note: This requires your AWS account to be already provisioned with the followin
 3. IAM role for instances
 4. An ec2 SSH key already created.  Define ssh_key_name with the name of your SSH key.
 
+Expects your AWS access/secret keys in /root/aws_access_key and /root/aws_secret_key as plain text files.
+
 ### Run Deploy
 
 Upload code to the S3 bucket first, then run ./deploy.sh
