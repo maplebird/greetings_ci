@@ -54,5 +54,19 @@
         mode: 0755
         force: true
 
+    - name: Stop Greetings service
+      service:
+        name: greetings
+        state: stopped
+
     - name: Run deployment script so node can checkout and deploy code
       command: "/root/deployment.sh {{ code_branch }}"
+      register: deploy_out
+
+    - debug:
+        var: deploy_out.stdout
+
+    - name: Start Greetings service
+      service:
+        name: greetings
+        state: started

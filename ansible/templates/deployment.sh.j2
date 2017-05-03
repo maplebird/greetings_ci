@@ -16,18 +16,7 @@ if [ ! -d "{{ greetings_project_folder }}" ]; then
 fi
 aws s3 cp s3://maplebird-greetings-project/{{ greetings_env }} /opt/{{ greetings_project_folder }}/ --recursive
 
-# Install init.d service
-/bin/cp -f /opt/{{ greetings_project_folder }}/sys/greetings /etc/rc.d/init.d/greetings
-chmod +x /etc/rc.d/init.d/greetings
-
 # Clean, install dependencies
-service greetings stop
 cd /opt/{{ greetings_project_folder }}
 rm -rf node_modules
 npm install
-
-# Start the API
-service greetings start
-
-# Show service status
-service greetings status
