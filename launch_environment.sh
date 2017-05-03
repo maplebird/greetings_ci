@@ -2,23 +2,17 @@
 
 # Get environment
 if [ -z "$1" ]; then
-    echo "Usage: ./deploy.sh ENV BRANCH (if branch is not specified, will deploy default for the environment"
+    echo "Usage: ./launch_environment.sh ENV"
     echo "Example:"
-    echo "    ./deploy.sh test release_1.0"
+    echo "    ./launch_environment.sh test"
     exit
 else
     ENV=$1
 fi
 
-if [ -z "$2" ]; then
-    echo "Deploying ${ENV} on `date`"
-    BRANCH_ANSIBLE_ARG=""
-else
-    BRANCH_ANSIBLE_ARG="-e \"code_branch=$2\""
-    echo "Deploying ${BRANCH} on ${ENV} on `date`"
-fi
+echo "Creating ${ENV} ASG on `date`"
 
 # Upload source code to S3
 
 cd ansible
-ansible-playbook launch_asg.yml -e "greetings_env=${ENV}"
+ansible-playbook launch_asg.yml -e "greetings_env=${ENV}" -vvv

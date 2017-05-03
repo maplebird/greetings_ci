@@ -46,8 +46,8 @@ git checkout ${BRANCH}
 git pull
 cd ..
 
-# Clean upload to an S3 bucket
+# Clean upload to an S3 bucket... aws s3 sync usually ignores files with same size
 export AWS_ACCESS_KEY_ID=$(cat /root/aws_access_key)
 export AWS_SECRET_ACCESS_KEY=$(cat /root/aws_secret_key)
-aws s3 rm s3://maplebird-greetings-project/${ENV}
+aws s3 rm s3://maplebird-greetings-project/${ENV} --recursive
 aws s3 cp greetings_src s3://maplebird-greetings-project/${ENV}/ --recursive --exclude .git*

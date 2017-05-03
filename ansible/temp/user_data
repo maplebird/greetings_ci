@@ -2,6 +2,10 @@
 
 # Bootstraps server
 
+# Add shortcuts
+echo "alias jkl='sudo su -'" >> /etc/profile
+ln -s /var/lib/cloud/instance/scripts/part-001 /root/user_data
+
 # Make sure git and node are installed
 yum -y install git nodejs npm --enablerepo=epel
 
@@ -14,14 +18,13 @@ cd greetings_src
 git checkout master
 git pull
 
-
-# Install systemd service
-cp /opt/greetings_src/sys/greetings /etc/rc.d/init.d/
+# Install init.d service
+/bin/cp -f greetings_src/sys/greetings /etc/rc.d/init.d/
 chmod +x /etc/rc.d/init.d/greetings
 
-# Clean and install dependencies
+# Clean, install dependencies
 service greetings stop
-cd /opt/greetings_src
+cd greetings_src
 rm -rf node_modules
 npm install
 
