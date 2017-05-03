@@ -44,7 +44,7 @@
         name: "{{ asg_name }}"
         launch_config_name: "{{ created_lc.name }}"
         min_size: "{{ asg_min_size | default(1) }}"
-        max_size: "{{ asg_max_size | default(1) }}"
+        max_size: "{{ asg_max_capacity[greetings_env] | default(1) }}"
         desired_capacity: "{{ asg_desired_capacity[greetings_env] | default(1) }}"
         tags: "{{ asg_tags }}"
         load_balancers: "{{ asg_load_balancers | default([]) }}"
