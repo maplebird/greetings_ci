@@ -2,6 +2,8 @@
 
 Configuration management and deployment pipeline for Greetings microservice
 
+This is a proof of concept/exercise to see how much of a deployment pipeline I could create in about 4-6 hours.
+
 ### Description
 
 Infrastructure as code stack for Greetings microservice:
